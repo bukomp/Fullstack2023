@@ -14,14 +14,21 @@ const App = () => {
     </div>
   )
 
-  const Statistics = () => (
-    <div>
-      <h1>statistics</h1>
-      <Statistic statiticName={"good"} statitic={good} />
-      <Statistic statiticName={"neutral"} statitic={neutral} />
-      <Statistic statiticName={"bad"} statitic={bad} />
-    </div>
-  )
+  const Statistics = () => {
+    const positive = ((good / (neutral + bad)) * 100)
+
+    return (
+      <div>
+        <h1>statistics</h1>
+        <Statistic statiticName={"good"} statitic={good} />
+        <Statistic statiticName={"neutral"} statitic={neutral} />
+        <Statistic statiticName={"bad"} statitic={bad} />
+        <Statistic statiticName={"all"} statitic={good + neutral + bad} />
+        <Statistic statiticName={"average"} statitic={(good - bad) / 3} />
+        <Statistic statiticName={"positive"} statitic={(!isNaN(positive) && isFinite(positive) ? positive : 0) + "%"} />
+      </div>
+    )
+  }
 
   const Button = ({ state, stateUpdateFunction, status }) => {
     return (<button
@@ -30,12 +37,14 @@ const App = () => {
       {status}
     </button>)
   }
-  const Statistic = ({ statiticName, statitic }) => <p>{statiticName} {statitic}</p>
 
   const addOne = (state, stateUpdateFunction) => {
     const newState = ++state
     stateUpdateFunction(newState)
   }
+
+  const Statistic = ({ statiticName, statitic }) => <p>{statiticName} {statitic}</p>
+
 
   return (
     <div>
