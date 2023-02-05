@@ -11,10 +11,13 @@ const Feedback = ({ good, neutral, bad, setGood, setNeutral, setBad }) => (
   </div>
 )
 
-const StatisticLine = ({ statiticName, value }) => <p>{statiticName} {value}</p>
+const StatisticLine = ({ statiticName, value }) => <tr>
+  <td>{statiticName}</td>
+  <td>{value}</td>
+</tr>
 
 const Statistics = ({ good, neutral, bad }) => {
-  const positive = ((good / (neutral + bad)) * 100)
+  const positive = ((good / (good + neutral + bad)) * 100)
 
   return (
     <div>
@@ -22,14 +25,19 @@ const Statistics = ({ good, neutral, bad }) => {
 
       {
         good + neutral + bad ?
-          <>
-            <StatisticLine statiticName={"good"} value={good} />
-            <StatisticLine statiticName={"neutral"} value={neutral} />
-            <StatisticLine statiticName={"bad"} value={bad} />
-            <StatisticLine statiticName={"all"} value={good + neutral + bad} />
-            <StatisticLine statiticName={"average"} value={(good - bad) / 3} />
-            <StatisticLine statiticName={"positive"} value={(!isNaN(positive) && isFinite(positive) ? positive : 0) + "%"} />
-          </>
+          <table>
+
+            <tbody>
+
+              <StatisticLine statiticName={"good"} value={good} />
+              <StatisticLine statiticName={"neutral"} value={neutral} />
+              <StatisticLine statiticName={"bad"} value={bad} />
+              <StatisticLine statiticName={"all"} value={good + neutral + bad} />
+              <StatisticLine statiticName={"average"} value={((good - bad) / 3)} />
+              <StatisticLine statiticName={"positive"} value={(!isNaN(positive) && isFinite(positive) ? positive : 0) + "%"} />
+
+            </tbody>
+          </table>
           :
           <p>No feedback given</p>
       }
