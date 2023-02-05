@@ -1,5 +1,24 @@
 import { useState } from 'react'
 
+
+const Statistic = ({ statiticName, statitic }) => <p>{statiticName} {statitic}</p>
+
+const Statistics = ({ good, neutral, bad }) => {
+  const positive = ((good / (neutral + bad)) * 100)
+
+  return (
+    <div>
+      <h1>statistics</h1>
+      <Statistic statiticName={"good"} statitic={good} />
+      <Statistic statiticName={"neutral"} statitic={neutral} />
+      <Statistic statiticName={"bad"} statitic={bad} />
+      <Statistic statiticName={"all"} statitic={good + neutral + bad} />
+      <Statistic statiticName={"average"} statitic={(good - bad) / 3} />
+      <Statistic statiticName={"positive"} statitic={(!isNaN(positive) && isFinite(positive) ? positive : 0) + "%"} />
+    </div>
+  )
+}
+
 const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
@@ -14,42 +33,19 @@ const App = () => {
     </div>
   )
 
-  const Statistics = () => {
-    const positive = ((good / (neutral + bad)) * 100)
 
-    return (
-      <div>
-        <h1>statistics</h1>
-        <Statistic statiticName={"good"} statitic={good} />
-        <Statistic statiticName={"neutral"} statitic={neutral} />
-        <Statistic statiticName={"bad"} statitic={bad} />
-        <Statistic statiticName={"all"} statitic={good + neutral + bad} />
-        <Statistic statiticName={"average"} statitic={(good - bad) / 3} />
-        <Statistic statiticName={"positive"} statitic={(!isNaN(positive) && isFinite(positive) ? positive : 0) + "%"} />
-      </div>
-    )
-  }
 
-  const Button = ({ state, stateUpdateFunction, status }) => {
-    return (<button
-      onClick={() => addOne(state, stateUpdateFunction)}
-    >
-      {status}
-    </button>)
-  }
-
-  const addOne = (state, stateUpdateFunction) => {
-    const newState = ++state
-    stateUpdateFunction(newState)
-  }
-
-  const Statistic = ({ statiticName, statitic }) => <p>{statiticName} {statitic}</p>
+  const Button = ({ state, stateUpdateFunction, status }) => <button onClick={() => stateUpdateFunction(++state)}>{status}</button>
 
 
   return (
     <div>
       <Feedback />
-      <Statistics />
+      <Statistics
+        good={good}
+        neutral={neutral}
+        bad={bad}
+      />
     </div>
   )
 }
