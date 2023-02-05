@@ -7,15 +7,25 @@ const Statistics = ({ good, neutral, bad }) => {
   const positive = ((good / (neutral + bad)) * 100)
 
   return (
+
     <div>
       <h1>statistics</h1>
-      <Statistic statiticName={"good"} statitic={good} />
-      <Statistic statiticName={"neutral"} statitic={neutral} />
-      <Statistic statiticName={"bad"} statitic={bad} />
-      <Statistic statiticName={"all"} statitic={good + neutral + bad} />
-      <Statistic statiticName={"average"} statitic={(good - bad) / 3} />
-      <Statistic statiticName={"positive"} statitic={(!isNaN(positive) && isFinite(positive) ? positive : 0) + "%"} />
+
+      {
+        good + neutral + bad ?
+          <>
+            <Statistic statiticName={"good"} statitic={good} />
+            <Statistic statiticName={"neutral"} statitic={neutral} />
+            <Statistic statiticName={"bad"} statitic={bad} />
+            <Statistic statiticName={"all"} statitic={good + neutral + bad} />
+            <Statistic statiticName={"average"} statitic={(good - bad) / 3} />
+            <Statistic statiticName={"positive"} statitic={(!isNaN(positive) && isFinite(positive) ? positive : 0) + "%"} />
+          </>
+          :
+          <p>No feedback given</p>
+      }
     </div>
+
   )
 }
 
