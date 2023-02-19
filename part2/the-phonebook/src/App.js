@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-import { fetchPersons } from './services/persons.service';
+import { fetchPersons, createPerson } from './services/persons.service';
 
 
 const App = () => {
@@ -32,7 +32,7 @@ const App = () => {
     setFilter(event.target.value);
   };
 
-  const addPerson = (event) => {
+  const addPerson = async (event) => {
     event.preventDefault();
     const personExists = persons.find((person) => person.name === newName);
     if (personExists) {
@@ -43,6 +43,7 @@ const App = () => {
       setPersons(persons.concat(newPerson));
       setNewName('');
       setNewNumber('');
+      await createPerson(newPerson)
     }
   };
 
