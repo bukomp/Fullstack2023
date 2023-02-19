@@ -4,6 +4,7 @@ const Course = ({ course }) => {
   const Content = () => {
     const Part = ({ name, exercises }) => (<p>{name} {exercises}</p>)
     const partsComponents = course.parts.map(part => <Part key={part.id} name={part.name} exercises={part.exercises} />)
+    // calculation of the totalExercises sum is calculated with the reduce method
     const totalExercises = course.parts.reduce((total, part) => total + part.exercises, 0)
 
     return (
