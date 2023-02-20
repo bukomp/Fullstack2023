@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-import { fetch, create, remove } from './services/persons.service';
+import { fetch, create, remove, update } from './services/persons.service';
 
 
 const App = () => {
@@ -32,10 +32,23 @@ const App = () => {
     setFilter(event.target.value);
   };
 
-  const addPerson = async (event) => {
+  const addOrUpdatePerson = async (event) => {
     event.preventDefault();
     const personExists = persons.find((person) => person.name === newName);
-    if (personExists) {
+    if (personExists && newNumber !== personExists.number) {
+      const alertMessage = `${personExists.name} is already added to phonebook, replace the old number with a new one?`;
+      if (window.confirm(alertMessage)) {
+        personExists.number = newNumber;
+        await update(personExists.id, personExists)
+        setPersons(persons.map(person => {
+          if (person.id === personExists.id) {
+            return personExists
+          } else {
+            return person
+          }
+        }))
+      }
+    } else if (personExists) {
       const alertMessage = `${newName} is already added to phonebook`;
       alert(alertMessage);
     } else {
@@ -65,7 +78,7 @@ const App = () => {
         handleNameChange={handleNameChange}
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
-        addPerson={addPerson}
+        addOrUpdatePerson={addOrUpdatePerson}
       />
 
       <h3>Numbers</h3>
