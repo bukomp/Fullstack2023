@@ -20,7 +20,7 @@ const App = () => {
   }, []);
 
   const onPageLoad = async () => {
-    setPersons(await fetch())
+    setPersons(await fetch(toggleNotification))
   }
 
   const handleNameChange = (event) => {
@@ -50,7 +50,7 @@ const App = () => {
       const alertMessage = `${personExists.name} is already added to phonebook, replace the old number with a new one?`;
       if (window.confirm(alertMessage)) {
         personExists.number = newNumber;
-        await update(personExists.id, personExists)
+        await update(toggleNotification, personExists.id, personExists)
         setPersons(persons.map(person => {
           if (person.id === personExists.id) {
             return personExists
@@ -67,14 +67,15 @@ const App = () => {
       const newPerson = { name: newName, number: newNumber };
       setNewName('');
       setNewNumber('');
-      const response = await create(newPerson)
+      const response = await create(toggleNotification, newPerson)
       setPersons(persons.concat(response));
       toggleNotification(`Added ${newPerson.name}`, 'notification')
     }
   };
 
   const deletePerson = async (id) => {
-    await remove(id)
+    const personToRemove = persons.find(person => person.id === id)
+    await remove(toggleNotification, personToRemove)
     setPersons(persons.filter(person => person.id !== id))
   };
 
