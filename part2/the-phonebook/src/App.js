@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Notification from './components/Notification';
 import { fetch, create, remove, update } from './services/persons.service';
 
 
@@ -11,6 +12,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [notification, setNotification] = useState('')
+
 
   useEffect(() => {
     onPageLoad()
@@ -32,6 +35,14 @@ const App = () => {
     setFilter(event.target.value);
   };
 
+  const toggleNotification = (message, status = 'notification' || 'error') => {
+    const newNotification = { message, status }
+    setNotification(newNotification)
+    setTimeout(() => {
+      setNotification("")
+    }, 3000)
+  }
+
   const addOrUpdatePerson = async (event) => {
     event.preventDefault();
     const personExists = persons.find((person) => person.name === newName);
@@ -47,6 +58,7 @@ const App = () => {
             return person
           }
         }))
+        toggleNotification(`Updated ${personExists.name}`, 'notification')
       }
     } else if (personExists) {
       const alertMessage = `${newName} is already added to phonebook`;
@@ -57,6 +69,7 @@ const App = () => {
       setNewNumber('');
       const response = await create(newPerson)
       setPersons(persons.concat(response));
+      toggleNotification(`Added ${newPerson.name}`, 'notification')
     }
   };
 
@@ -68,6 +81,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification notification={notification}></Notification>
 
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
