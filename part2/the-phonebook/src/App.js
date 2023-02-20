@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-import { fetchPersons, createPerson } from './services/persons.service';
+import { fetch, create, remove } from './services/persons.service';
 
 
 const App = () => {
@@ -17,7 +17,7 @@ const App = () => {
   }, []);
 
   const onPageLoad = async () => {
-    setPersons(await fetchPersons())
+    setPersons(await fetch())
   }
 
   const handleNameChange = (event) => {
@@ -40,11 +40,16 @@ const App = () => {
       alert(alertMessage);
     } else {
       const newPerson = { name: newName, number: newNumber };
-      setPersons(persons.concat(newPerson));
       setNewName('');
       setNewNumber('');
-      await createPerson(newPerson)
+      const response = await create(newPerson)
+      setPersons(persons.concat(response));
     }
+  };
+
+  const deletePerson = async (id) => {
+    await remove(id)
+    setPersons(persons.filter(person => person.id !== id))
   };
 
   return (
@@ -65,7 +70,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} removePerson={deletePerson} filter={filter} />
     </div>
   );
 };
