@@ -25,7 +25,7 @@ function App() {
   return (
     <div>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
-      <List countries={countries} filter={filter}></List>
+      <List countries={countries} filter={filter} handleFilterChange={handleFilterChange}></List>
       <Country countries={countries} filter={filter}></Country>
     </div>
   );
