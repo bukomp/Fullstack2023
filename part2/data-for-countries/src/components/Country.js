@@ -1,6 +1,11 @@
-const Country = ({ countries, filter }) => {
-  const filteredCountries = countries.filter((country) => country.name.common.toLowerCase().includes(filter.toLowerCase()))
-  if (filter !== '' && filteredCountries.length === 1) {
+import Weather from './Weather'
+
+/**
+ * @augments {Component<Props, State>}
+ */
+const Country = ({ filteredCountries, weather }) => {
+  if (filteredCountries.length === 1) {
+
     const country = filteredCountries[0]
     return (
       <div>
@@ -14,7 +19,14 @@ const Country = ({ countries, filter }) => {
           )}
         </ul>
         <img alt={`flag of ${country.name.common}`} src={country.flags.png} />
-
+       {weather && <Weather 
+        capitalName={country.capital[0]} 
+        icon={weather.current.weather[0].icon} 
+        iconAlt={weather.current.weather[0].description} 
+        temperature={weather.current.temp}
+        windSpeed={weather.current.wind_speed}
+        >
+        </Weather>}
       </div>
     );
   } else return null

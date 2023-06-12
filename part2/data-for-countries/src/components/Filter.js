@@ -1,3 +1,6 @@
+/**
+ * @augments {Component<Props, State>}
+ */
 const Filter = ({ filter, handleFilterChange }) => {
     return (
         <>
