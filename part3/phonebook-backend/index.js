@@ -7,6 +7,17 @@ app.use(express.json());
 
 const PORT = 3001;
 
+const newPersonMiddleware = (req, res, next) => {
+  if(!req.body.name || !req.body.number){
+    return res.status(400).json({
+      error: "name or number doesn't exist in new phonebook entry"
+    })
+  } else if (phonebook.some(p => p.name === req.body.name)){
+    return res.status(400).json({ error: 'name must be unique' })
+  }
+  next()
+}
+
 app.get('/api/persons/:id', (req, res) => {
   if(Number(req.params.id) <= 0 || Number(req.params.id) > phonebook.length){
     return res.status(404).end()
@@ -24,7 +35,7 @@ app.delete('/api/persons/:id', (req, res) => {
   }
 });
  
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons',newPersonMiddleware, (req, res) => {
   const newPerson = req.body
   newPerson.id = Math.ceil(Math.random()*1000000)
   phonebook.push(newPerson)
