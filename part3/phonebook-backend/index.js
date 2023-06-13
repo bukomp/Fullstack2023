@@ -3,6 +3,8 @@ const phonebook = require('./resources/phonebook.json')
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 const PORT = 3001;
 
 app.get('/api/persons/:id', (req, res) => {
@@ -21,7 +23,14 @@ app.delete('/api/persons/:id', (req, res) => {
     return res.json(phonebook);
   }
 });
-
+ 
+app.post('/api/persons', (req, res) => {
+  const newPerson = req.body
+  newPerson.id = Math.ceil(Math.random()*1000000)
+  phonebook.push(newPerson)
+  return res.json(phonebook)
+});
+ 
 app.get('/api/persons', (req, res) => {
   return res.json(phonebook);
 }); 
