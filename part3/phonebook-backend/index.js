@@ -1,10 +1,12 @@
 const phonebook = require('./resources/phonebook.json')
 
 const morgan = require('morgan')
+const cors = require('cors')
 const express = require('express');
 
 const app = express();
 
+app.use(cors())
 app.use(express.json());
 app.use(morgan((tokens, req, res) =>  [
     tokens.method(req, res),
@@ -15,8 +17,6 @@ app.use(morgan((tokens, req, res) =>  [
     tokens.method(req, res) === 'POST'?JSON.stringify(req.body):""
   ].join(' ')
 ));
-
-const PORT = 3001;
 
 const newPersonMiddleware = (req, res, next) => {
   if(!req.body.name || !req.body.number){
@@ -69,6 +69,7 @@ app.get('/info', (req, res) => {
   return res.send(info);
 });
 
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

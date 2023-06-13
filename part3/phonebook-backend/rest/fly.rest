@@ -1,0 +1,33 @@
+GET http://long-sun-3157.fly.dev/api/persons
+
+###
+GET http://long-sun-3157.fly.dev/api/persons/2
+
+###
+DELETE http://long-sun-3157.fly.dev/api/persons/4
+
+### Same name
+POST http://long-sun-3157.fly.dev/api/persons
+content-type: application/json
+
+{
+  "name": "Arto Hellas",
+  "number": "040-123456"
+}
+
+###
+POST http://long-sun-3157.fly.dev/api/persons
+content-type: application/json
+
+{
+  "name": "Arto Hellas 2",
+  "number": "040-123456"
+}
+
+###
+POST http://long-sun-3157.fly.dev/api/persons
+content-type: application/json
+
+{
+  "name": "Arto Hellas 2"
+}
