@@ -8,6 +8,7 @@ const app = express();
 
 app.use(cors())
 app.use(express.json());
+
 app.use(morgan((tokens, req, res) =>  [
     tokens.method(req, res),
     tokens.url(req, res),
@@ -28,6 +29,8 @@ const newPersonMiddleware = (req, res, next) => {
   }
   next()
 }
+
+app.use(express.static('./public'))
 
 app.get('/api/persons/:id', (req, res) => {
   if(Number(req.params.id) <= 0 || Number(req.params.id) > phonebook.length){
@@ -50,14 +53,12 @@ app.post('/api/persons',newPersonMiddleware, (req, res) => {
   const newPerson = req.body
   newPerson.id = Math.ceil(Math.random()*1000000)
   phonebook.push(newPerson)
-  return res.json(phonebook)
+  return res.json(newPerson)
 });
  
 app.get('/api/persons', (req, res) => {
   return res.json(phonebook);
 }); 
-
-
 
 app.get('/info', (req, res) => {
   const info = `
