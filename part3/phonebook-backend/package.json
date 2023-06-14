@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "set NODE_ENV=development&& nodemon index.js",
+    "dev:ui": "cd ../phonebook-connected-to-backend && npm start",
     "build": "rm -rf ./public/* && cd ../phonebook-connected-to-backend && npm run build && cp -r build/* ../phonebook-backend/public",
     "deploy": "fly deploy",
     "deploy:full": "npm run build && npm run deploy"

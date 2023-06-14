@@ -44,33 +44,41 @@ const App = () => {
   }
 
   const addOrUpdatePerson = async (event) => {
-    event.preventDefault();
-    const personExists = persons.find((person) => person.name === newName);
-    if (personExists && newNumber !== personExists.number) {
-      const alertMessage = `${personExists.name} is already added to phonebook, replace the old number with a new one?`;
-      if (window.confirm(alertMessage)) {
-        personExists.number = newNumber;
-        await update(toggleNotification, personExists.id, personExists)
-        setPersons(persons.map(person => {
-          if (person.id === personExists.id) {
-            return personExists
-          } else {
-            return person
-          }
-        }))
-        toggleNotification(`Updated ${personExists.name}`, 'notification')
+    try {
+      event.preventDefault();
+      const personExists = persons.find((person) => person.name === newName);
+      if (personExists && newNumber !== personExists.number) {
+        const alertMessage = `${personExists.name} is already added to phonebook, replace the old number with a new one?`;
+        if (window.confirm(alertMessage)) {
+          personExists.number = newNumber;
+          update(toggleNotification, personExists.id, personExists).then(d => {
+            setPersons(persons.map(person => {
+              if (person.id === personExists.id) {
+                return personExists
+              } else {
+                return person
+              }
+            }))
+            toggleNotification(`Updated ${personExists.name}`, 'notification')
+          })
+        }
+      } else if (personExists) {
+        const alertMessage = `${newName} is already added to phonebook`;
+        alert(alertMessage);
+      } else {
+        const newPerson = { name: newName, number: newNumber };
+        setNewName('');
+        setNewNumber('');
+        create(toggleNotification, newPerson).then(response => {
+          console.log(response)
+          setPersons(persons.concat(response));
+          toggleNotification(`Added ${newPerson.name}`, 'notification')
+        })
       }
-    } else if (personExists) {
-      const alertMessage = `${newName} is already added to phonebook`;
-      alert(alertMessage);
-    } else {
-      const newPerson = { name: newName, number: newNumber };
-      setNewName('');
-      setNewNumber('');
-      const response = await create(toggleNotification, newPerson)
-      setPersons(persons.concat(response));
-      toggleNotification(`Added ${newPerson.name}`, 'notification')
+    } catch (error) {
+        toggleNotification(error.message, 'error')
     }
+    
   };
 
   const deletePerson = async (id) => {
