@@ -9,7 +9,8 @@
     "dev:ui": "cd ../phonebook-connected-to-backend && npm start",
     "build": "rm -rf ./public/* && cd ../phonebook-connected-to-backend && npm run build && cp -r build/* ../phonebook-backend/public",
     "deploy": "fly deploy",
-    "deploy:full": "npm run build && npm run deploy"
+    "deploy:full": "npm run build && npm run deploy",
+    "lint": "eslint ."
   },
   "author": "Edvard",
   "license": "ISC",
@@ -23,6 +24,8 @@
   "devDependencies": {
     "@flydotio/dockerfile": "^0.2.15",
     "dotenv": "^16.1.4",
+    "eslint": "^8.42.0",
+    "eslint-config-google": "^0.14.0",
     "nodemon": "^2.0.22"
   }
 }
