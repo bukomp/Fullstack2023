@@ -50,6 +50,17 @@ app.get('/api/persons/:id', async (req, res, next) => {
   }).catch(error => next(error))
 });
 
+app.put('/api/persons/:id', async (req, res, next) => {
+  delete req.body.id
+  Person.updateOne({ _id: req.params.id }, req.body).then(person => {
+    if(person){
+      return res.json(person);
+    } else {
+      return res.status(404).end()
+    }
+  }).catch(error => next(error))
+});
+
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.deleteOne({ _id: req.params.id }).then(person => {
     if(person){
