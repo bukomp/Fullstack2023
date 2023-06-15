@@ -1,3 +1,5 @@
+const _ = require("lodash/core");
+
 const dummy = (blogs) => {
   return 1;
 };
@@ -9,7 +11,16 @@ const totalLikes = (blogs) => {
   );
 };
 
+const favoriteBlog = (blogs) => {
+  return blogs
+    .sort((a, b) => {
+      return a.likes - b.likes;
+    })
+    .slice(-1)[0];
+};
+
 module.exports = {
   dummy,
   totalLikes,
+  favoriteBlog,
 };
