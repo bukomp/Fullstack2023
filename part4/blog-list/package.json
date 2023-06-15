@@ -1,0 +1,22 @@
+{
+  "name": "blog-list",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "set NODE_ENV=development&& nodemon index.js"
+  },
+  "author": "Edvard",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^7.3.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.1.4",
+    "eslint": "^8.42.0",
+    "nodemon": "^2.0.22"
+  }
+}
