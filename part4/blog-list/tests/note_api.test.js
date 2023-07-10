@@ -63,6 +63,25 @@ test("blog is saved correctly", async () => {
   expect(blogs.body[0]).toHaveProperty(["likes"]);
 });
 
+test("expect likes to be 0 is not defined", async () => {
+  await Blog.deleteMany();
+
+  let blogs = await api.get("/api/blogs");
+  expect(blogs.body.length).toStrictEqual(0);
+
+  await api
+    .post("/api/blogs")
+    .send({
+      title: "test1",
+      author: "author1",
+      url: "wadkbawda",
+    })
+    .expect(201);
+
+  blogs = await api.get("/api/blogs");
+  expect(blogs.body[0].likes).toStrictEqual(0);
+});
+
 afterAll(async () => {
   await Blog.deleteMany();
   await mongoose.connection.close();
