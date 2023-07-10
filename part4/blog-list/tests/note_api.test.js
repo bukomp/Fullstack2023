@@ -22,7 +22,7 @@ test("1 blog is returned from DB", async () => {
     .expect("Content-Type", /application\/json/);
 
   expect(blogs.body.length).toStrictEqual(1);
-}, 100000);
+});
 
 test("returned blogs have id property", async () => {
   await Blog.deleteMany();
@@ -37,7 +37,31 @@ test("returned blogs have id property", async () => {
 
   expect(blogs.body[0].id).toBeDefined();
   expect(blogs.body[0]._id).not.toBeDefined();
-}, 100000);
+});
+
+test("blog is saved correctly", async () => {
+  await Blog.deleteMany();
+
+  let blogs = await api.get("/api/blogs");
+  expect(blogs.body.length).toStrictEqual(0);
+
+  await api
+    .post("/api/blogs")
+    .send({
+      title: "test1",
+      author: "author1",
+      url: "wadkbawda",
+      likes: 2,
+    })
+    .expect(201);
+
+  blogs = await api.get("/api/blogs");
+  expect(blogs.body.length).toStrictEqual(1);
+  expect(blogs.body[0]).toHaveProperty(["title"]);
+  expect(blogs.body[0]).toHaveProperty(["author"]);
+  expect(blogs.body[0]).toHaveProperty(["url"]);
+  expect(blogs.body[0]).toHaveProperty(["likes"]);
+});
 
 afterAll(async () => {
   await Blog.deleteMany();
