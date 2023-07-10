@@ -66,9 +66,6 @@ test("blog is saved correctly", async () => {
 test("expect likes to be 0 is not defined", async () => {
   await Blog.deleteMany();
 
-  let blogs = await api.get("/api/blogs");
-  expect(blogs.body.length).toStrictEqual(0);
-
   await api
     .post("/api/blogs")
     .send({
@@ -80,6 +77,24 @@ test("expect likes to be 0 is not defined", async () => {
 
   blogs = await api.get("/api/blogs");
   expect(blogs.body[0].likes).toStrictEqual(0);
+});
+
+test("malformed data returns error", async () => {
+  await api
+    .post("/api/blogs")
+    .send({
+      author: "author1",
+      url: "wadkbawda",
+    })
+    .expect(400);
+
+  await api
+    .post("/api/blogs")
+    .send({
+      title: "test1",
+      author: "author1",
+    })
+    .expect(400);
 });
 
 afterAll(async () => {

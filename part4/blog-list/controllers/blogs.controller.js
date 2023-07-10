@@ -7,6 +7,10 @@ blogsRouter.get("/blogs", async (request, response) => {
 });
 
 blogsRouter.post("/blogs", async (request, response) => {
+  if (!request.body.title || !request.body.url) {
+    return response.sendStatus(400);
+  }
+
   const blog = new Blog(request.body);
 
   const result = await blog.save();
