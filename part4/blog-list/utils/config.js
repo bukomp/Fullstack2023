@@ -7,6 +7,6 @@ module.exports = {
   NODE_ENV: process.env.NODE_ENV,
   MONGODB_URL:
     process.env.NODE_ENV === "test"
-      ? process.env.MONGODB_URL
-      : process.env.TEST_MONGODB_URL,
+      ? process.env.TEST_MONGODB_URL
+      : process.env.MONGODB_URL,
 };

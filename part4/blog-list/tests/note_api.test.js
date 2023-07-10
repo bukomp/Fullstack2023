@@ -7,7 +7,7 @@ const app = require("../app");
 
 const api = supertest(app);
 
-test("blogs are returned as json", async () => {
+test("1 blog is returned from DB", async () => {
   await Blog.deleteMany();
   await new Blog({
     title: "test1",
@@ -24,6 +24,22 @@ test("blogs are returned as json", async () => {
   expect(blogs.body.length).toStrictEqual(1);
 }, 100000);
 
+test("returned blogs have id property", async () => {
+  await Blog.deleteMany();
+  await new Blog({
+    title: "test1",
+    author: "author1",
+    url: "wadkbawda",
+    likes: 2,
+  }).save();
+
+  const blogs = await api.get("/api/blogs");
+
+  expect(blogs.body[0].id).toBeDefined();
+  expect(blogs.body[0]._id).not.toBeDefined();
+}, 100000);
+
 afterAll(async () => {
+  await Blog.deleteMany();
   await mongoose.connection.close();
 });
