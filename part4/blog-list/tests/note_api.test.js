@@ -97,21 +97,44 @@ test("malformed data returns error", async () => {
     .expect(400);
 });
 
-test("delete blog entry", async () => {
+test("update blog entry", async () => {
   await Blog.deleteMany();
 
   const newBlog = await api
     .post("/api/blogs")
     .send({
+      title: "test1",
       author: "author1",
       url: "wadkbawda",
     })
-    .expect(400);
+    .expect(201);
 
   await api.delete(`/api/blogs/${newBlog.body.id}`).expect(204);
 
   const blogs = await api.get("/api/blogs");
   expect(blogs.body.length).toStrictEqual(0);
+});
+
+test("update blog entry", async () => {
+  await Blog.deleteMany();
+
+  const newBlog = await api
+    .post("/api/blogs")
+    .send({
+      title: "test1",
+      author: "author1",
+      url: "wadkbawda",
+      likes: 0,
+    })
+    .expect(201);
+
+  const updatedBlog = await api
+    .put(`/api/blogs/${newBlog.body.id}`)
+    .send({ likes: 10 })
+    .expect(200);
+
+  const blogs = await api.get("/api/blogs");
+  expect(blogs.body[0].likes).toStrictEqual(10);
 });
 
 afterAll(async () => {
