@@ -152,7 +152,10 @@ test("update blog entry", async () => {
     })
     .expect(201);
 
-  await api.delete(`/api/blogs/${newBlog.body.id}`).expect(204);
+  await api
+    .delete(`/api/blogs/${newBlog.body.id}`)
+    .set("Authorization", `Bearer ${token}`)
+    .expect(204);
 
   const blogs = await api.get("/api/blogs");
   expect(blogs.body.length).toStrictEqual(0);
@@ -179,6 +182,66 @@ test("update blog entry", async () => {
 
   const blogs = await api.get("/api/blogs");
   expect(blogs.body[0].likes).toStrictEqual(10);
+});
+
+test("delete blog entry", async () => {
+  await Blog.deleteMany();
+
+  const newBlog = await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
+    .send({
+      title: "test1",
+      author: "author1",
+      url: "wadkbawda",
+    })
+    .expect(201);
+
+  await api
+    .delete(`/api/blogs/${newBlog.body.id}`)
+    .set("Authorization", `Bearer ${token}`)
+    .expect(204);
+
+  const blogs = await api.get("/api/blogs");
+  expect(blogs.body.length).toStrictEqual(0);
+});
+
+test("delete blog entry by another user", async () => {
+  await Blog.deleteMany();
+
+  await api.post("/api/user").send({
+    name: "name2",
+    username: "test2",
+    password: "testPassword2",
+  });
+
+  const anotherUserLogin = await api
+    .post("/api/login")
+    .send({
+      username: "test2",
+      password: "testPassword2",
+    })
+    .expect(200);
+
+  const anotherUserToken = anotherUserLogin.body.token;
+
+  const newBlog = await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
+    .send({
+      title: "test1",
+      author: "author1",
+      url: "wadkbawda",
+    })
+    .expect(201);
+
+  await api
+    .delete(`/api/blogs/${newBlog.body.id}`)
+    .set("Authorization", `Bearer ${anotherUserToken}`)
+    .expect(401);
+
+  const blogs = await api.get("/api/blogs");
+  expect(blogs.body.length).toStrictEqual(1);
 });
 
 afterAll(async () => {
