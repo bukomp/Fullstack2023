@@ -8,6 +8,15 @@ content-type: application/json
   "password": "testPasswordHash"
 }
 
+###login
+POST http://localhost:3001/api/login
+content-type: application/json
+
+{
+  "username": "test",
+  "password": "testPasswordHash"
+}
+
 ###
 POST http://localhost:3001/api/blogs
 content-type: application/json
