@@ -8,7 +8,7 @@ const app = require("../app");
 const api = supertest(app);
 
 test("1 user is returned from DB", async () => {
-  await User.deleteMany();
+  await User.deleteMany({});
 
   const newUser = await api
     .post("/api/user")
@@ -28,7 +28,7 @@ test("1 user is returned from DB", async () => {
 });
 
 test("user is not created if username is not unique", async () => {
-  await User.deleteMany();
+  await User.deleteMany({});
 
   await api
     .post("/api/user")
@@ -57,7 +57,7 @@ test("user is not created if username is not unique", async () => {
 });
 
 test("user is not created if username or password are less than 3 characters long", async () => {
-  await User.deleteMany();
+  await User.deleteMany({});
 
   const newUser = await api
     .post("/api/user")
@@ -78,6 +78,6 @@ test("user is not created if username or password are less than 3 characters lon
 });
 
 afterAll(async () => {
-  await User.deleteMany();
+  await User.deleteMany({});
   await mongoose.connection.close();
 });

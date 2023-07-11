@@ -2,19 +2,36 @@ require("dotenv").config();
 
 const mongoose = require("mongoose");
 const Blog = require("../models/blog.schema");
+const User = require("../models/user.schema");
 const supertest = require("supertest");
 const app = require("../app");
 
 const api = supertest(app);
 
+let user;
+
+beforeAll(async () => {
+  await User.deleteMany({});
+  user = await api.post("/api/user").send({
+    name: "name1",
+    username: "username1",
+    password: "wadkbawda",
+  });
+});
+
 test("1 blog is returned from DB", async () => {
-  await Blog.deleteMany();
-  await new Blog({
-    title: "test1",
-    author: "author1",
-    url: "wadkbawda",
-    likes: 2,
-  }).save();
+  await Blog.deleteMany({});
+
+  await api
+    .post("/api/blogs")
+    .send({
+      title: "test1",
+      author: "author1",
+      url: "wadkbawda",
+      likes: 2,
+      user: user.id,
+    })
+    .expect(201);
 
   const blogs = await api
     .get("/api/blogs")
@@ -25,22 +42,28 @@ test("1 blog is returned from DB", async () => {
 });
 
 test("returned blogs have id property", async () => {
-  await Blog.deleteMany();
-  await new Blog({
-    title: "test1",
-    author: "author1",
-    url: "wadkbawda",
-    likes: 2,
-  }).save();
+  await Blog.deleteMany({});
+  await api
+    .post("/api/blogs")
+    .send({
+      title: "test1",
+      author: "author1",
+      url: "wadkbawda",
+      likes: 2,
+      user: user.id,
+    })
+    .expect(201);
 
   const blogs = await api.get("/api/blogs");
-
   expect(blogs.body[0].id).toBeDefined();
   expect(blogs.body[0]._id).not.toBeDefined();
+  expect(blogs.body[0].user).toBeDefined();
+  expect(blogs.body[0].user.username).toBeDefined();
+  expect(blogs.body[0].user.name).toBeDefined();
 });
 
 test("blog is saved correctly", async () => {
-  await Blog.deleteMany();
+  await Blog.deleteMany({});
 
   let blogs = await api.get("/api/blogs");
   expect(blogs.body.length).toStrictEqual(0);
@@ -52,6 +75,7 @@ test("blog is saved correctly", async () => {
       author: "author1",
       url: "wadkbawda",
       likes: 2,
+      user: user.id,
     })
     .expect(201);
 
@@ -64,7 +88,7 @@ test("blog is saved correctly", async () => {
 });
 
 test("expect likes to be 0 is not defined", async () => {
-  await Blog.deleteMany();
+  await Blog.deleteMany({});
 
   await api
     .post("/api/blogs")
@@ -98,7 +122,7 @@ test("malformed data returns error", async () => {
 });
 
 test("update blog entry", async () => {
-  await Blog.deleteMany();
+  await Blog.deleteMany({});
 
   const newBlog = await api
     .post("/api/blogs")
@@ -116,7 +140,7 @@ test("update blog entry", async () => {
 });
 
 test("update blog entry", async () => {
-  await Blog.deleteMany();
+  await Blog.deleteMany({});
 
   const newBlog = await api
     .post("/api/blogs")
@@ -138,6 +162,7 @@ test("update blog entry", async () => {
 });
 
 afterAll(async () => {
-  await Blog.deleteMany();
+  await Blog.deleteMany({});
+  await User.deleteMany({});
   await mongoose.connection.close();
 });

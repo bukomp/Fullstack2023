@@ -42,7 +42,6 @@ describe("total likes", () => {
 
   test("find out which blog has the most likes", () => {
     const result = listHelper.favoriteBlog(blogList);
-    console.log(result, blogList[1]);
     expect(result).toStrictEqual(blogList[1]);
   });
 

@@ -7,7 +7,7 @@
     "testEnvironment": "node"
   },
   "scripts": {
-    "test": "set NODE_ENV=test&& jest --verbose",
+    "test": "set NODE_ENV=test&&jest --silent=true --runInBand",
     "start": "node index.js",
     "dev": "set NODE_ENV=development&& nodemon index.js"
   },

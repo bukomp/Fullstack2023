@@ -1,0 +1,24 @@
+### user
+POST http://localhost:3001/api/user
+content-type: application/json
+
+{
+  "name": "testUser",
+  "username": "test",
+  "password": "testPasswordHash"
+}
+
+###
+POST http://localhost:3001/api/blogs
+content-type: application/json
+
+{
+  "title": "test1",
+  "author": "author1",
+  "url": "wadkbawda",
+  "likes": 2
+}
+
+###
+GET http://localhost:3001/api/blogs
+content-type: application/json
