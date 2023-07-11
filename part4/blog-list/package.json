@@ -7,13 +7,14 @@
     "testEnvironment": "node"
   },
   "scripts": {
-    "test": "set NODE_ENV=test && jest --verbose",
+    "test": "set NODE_ENV=test&& jest --verbose",
     "start": "node index.js",
     "dev": "set NODE_ENV=development&& nodemon index.js"
   },
   "author": "Edvard",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "lodash": "^4.17.21",
@@ -23,7 +24,7 @@
     "dotenv": "^16.1.4",
     "eslint": "^8.42.0",
     "jest": "^29.5.0",
-    "nodemon": "^2.0.22",
+    "nodemon": "^3.0.1",
     "supertest": "^6.3.3"
   }
 }
