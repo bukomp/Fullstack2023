@@ -8,15 +8,28 @@ const app = require("../app");
 
 const api = supertest(app);
 
+let token;
 let user;
 
 beforeAll(async () => {
   await User.deleteMany({});
-  user = await api.post("/api/user").send({
+
+  await api.post("/api/user").send({
     name: "name1",
-    username: "username1",
-    password: "wadkbawda",
+    username: "test",
+    password: "testPassword",
   });
+
+  const userLogin = await api
+    .post("/api/login")
+    .send({
+      username: "test",
+      password: "testPassword",
+    })
+    .expect(200);
+
+  token = userLogin.body.token;
+  user = userLogin.body;
 });
 
 test("1 blog is returned from DB", async () => {
@@ -24,6 +37,7 @@ test("1 blog is returned from DB", async () => {
 
   await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       title: "test1",
       author: "author1",
@@ -45,6 +59,7 @@ test("returned blogs have id property", async () => {
   await Blog.deleteMany({});
   await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       title: "test1",
       author: "author1",
@@ -70,12 +85,12 @@ test("blog is saved correctly", async () => {
 
   await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       title: "test1",
       author: "author1",
       url: "wadkbawda",
       likes: 2,
-      user: user.id,
     })
     .expect(201);
 
@@ -92,6 +107,7 @@ test("expect likes to be 0 is not defined", async () => {
 
   await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       title: "test1",
       author: "author1",
@@ -106,6 +122,7 @@ test("expect likes to be 0 is not defined", async () => {
 test("malformed data returns error", async () => {
   await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       author: "author1",
       url: "wadkbawda",
@@ -114,6 +131,7 @@ test("malformed data returns error", async () => {
 
   await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       title: "test1",
       author: "author1",
@@ -126,6 +144,7 @@ test("update blog entry", async () => {
 
   const newBlog = await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       title: "test1",
       author: "author1",
@@ -144,6 +163,7 @@ test("update blog entry", async () => {
 
   const newBlog = await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       title: "test1",
       author: "author1",
