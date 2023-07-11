@@ -1,22 +1,15 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog.schema");
-const User = require("../models/user.schema");
-const jwt = require("jsonwebtoken");
+const middleware = require("../utils/middleware");
 
-blogsRouter.get("/blogs", async (request, response) => {
+blogsRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", "username name");
   response.json(blogs);
 });
 
-blogsRouter.post("/blogs", async (request, response) => {
+blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
   const body = request.body;
-
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  if (!request.token || !decodedToken.id) {
-    return response.status(401).json({ error: "token missing or invalid" });
-  }
-
-  const user = await User.findById(decodedToken.id);
+  const user = request.user;
 
   if (!body.title || !body.url) {
     return response.status(400).json({ error: "title or url missing" });
@@ -37,33 +30,30 @@ blogsRouter.post("/blogs", async (request, response) => {
   response.status(201).json(savedBlog);
 });
 
-blogsRouter.delete("/blogs/:id", async (request, response) => {
-  try {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: "token missing or invalid" });
-    }
-
+blogsRouter.delete(
+  "/:id",
+  middleware.userExtractor,
+  async (request, response) => {
     const blog = await Blog.findById(request.params.id);
-    if (!blog) {
-      return response.sendStatus(404);
-    }
+    const user = request.user;
 
-    if (blog.user.toString() !== decodedToken.id) {
+    if (blog.user.toString() !== user.id.toString()) {
       return response
         .status(401)
         .json({ error: "only the creator can delete blogs" });
     }
 
-    await Blog.findByIdAndDelete(request.params.id);
+    await Blog.findByIdAndRemove(request.params.id);
+    user.blogs = user.blogs.filter(
+      (b) => b.id.toString() !== request.params.id
+    );
+    await user.save();
 
-    response.sendStatus(204);
-  } catch (error) {
-    return response.status(500).send(error);
+    response.status(204).end();
   }
-});
+);
 
-blogsRouter.put("/blogs/:id", async (request, response) => {
+blogsRouter.put("/:id", async (request, response) => {
   try {
     const blog = await Blog.findById(request.params.id);
     if (!blog) {

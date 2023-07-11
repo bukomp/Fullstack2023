@@ -28,7 +28,8 @@ app.use(express.json());
 app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);
 
-app.use("/api", [blogsRouter, usersRouter, loginRouter]);
+app.use("/api", [usersRouter, loginRouter]);
+app.use("/api/blogs", blogsRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);

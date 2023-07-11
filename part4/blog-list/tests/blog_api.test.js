@@ -185,7 +185,7 @@ test("update blog entry", async () => {
 });
 
 test("delete blog entry", async () => {
-  await Blog.deleteMany();
+  await Blog.deleteMany({});
 
   const newBlog = await api
     .post("/api/blogs")
@@ -207,7 +207,7 @@ test("delete blog entry", async () => {
 });
 
 test("delete blog entry by another user", async () => {
-  await Blog.deleteMany();
+  await Blog.deleteMany({});
 
   await api.post("/api/user").send({
     name: "name2",
@@ -242,6 +242,22 @@ test("delete blog entry by another user", async () => {
 
   const blogs = await api.get("/api/blogs");
   expect(blogs.body.length).toStrictEqual(1);
+});
+
+test("blog creation fails if a token is not provided", async () => {
+  await Blog.deleteMany({});
+
+  const newBlog = {
+    title: "test1",
+    author: "author1",
+    url: "wadkbawda",
+    likes: 2,
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(401);
+
+  const blogsAtEnd = await api.get("/api/blogs");
+  expect(blogsAtEnd.body.length).toStrictEqual(0);
 });
 
 afterAll(async () => {

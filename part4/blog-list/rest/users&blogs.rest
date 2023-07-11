@@ -20,6 +20,7 @@ content-type: application/json
 ###
 POST http://localhost:3001/api/blogs
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjY0YWQ5YmJkMGE5MTQyYzJhYjkxYWI2NCIsImlhdCI6MTY4OTEwMjg3NH0.9wG94Y2FHIyoGw7Kc-IuDOCLMzp496VcgC2Yc-NBvtU
 
 {
   "title": "test1",
