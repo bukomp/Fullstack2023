@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import BlogList from "./components/BlogList";
 import LoginForm from "./components/LoginForm";
+import CreateBlogForm from "./components/CreateBlogForm";
 
 import blogService from "./services/blogs.service";
 import userService from "./services/user.service";
@@ -36,6 +37,11 @@ const App = () => {
     }
   };
 
+  const handleBlogCreation = async (title, author, url) => {
+    const newBlog = await blogService.createBlog(token, title, author, url);
+    setBlogs([...blogs, newBlog]);
+  };
+
   const handleLogout = () => {
     setToken(null);
     window.localStorage.removeItem("loggedInUserToken");
@@ -61,20 +67,10 @@ const App = () => {
           <button onClick={handleLogout}>Logout</button>
         </span>
       </p>
-
+      <CreateBlogForm handleBlogCreation={handleBlogCreation} />
       <BlogList blogs={blogs} />
     </>
   );
-
-  /*
-  return (
-    <div>
-      <h2>blogs</h2>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
-    </div>
-  );*/
 };
 
 export default App;
