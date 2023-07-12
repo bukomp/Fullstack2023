@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BlogList from "./components/BlogList";
 import LoginForm from "./components/LoginForm";
 
@@ -10,6 +10,15 @@ const App = () => {
   const [user, setUser] = useState("");
   const [blogs, setBlogs] = useState([]);
 
+  useEffect(() => {
+    const token = window.localStorage.getItem("loggedInUserToken");
+    if (token) {
+      setToken(token);
+      // Fetch the blogs after loading the token
+      fetchBlogs(token);
+    }
+  }, []);
+
   const handleLogin = async (username, password) => {
     try {
       const data = await userService.login(username, password);
@@ -18,11 +27,18 @@ const App = () => {
         username: data.username,
       });
       setToken(data.token);
-      // Fetch the blogs after successful login
+
+      window.localStorage.setItem("loggedInUserToken", data.token);
+
       fetchBlogs(data.token);
     } catch (error) {
       console.error("Login failed:", error);
     }
+  };
+
+  const handleLogout = () => {
+    setToken(null);
+    window.localStorage.removeItem("loggedInUserToken");
   };
 
   const fetchBlogs = async (token) => {
@@ -37,7 +53,17 @@ const App = () => {
   return !token ? (
     <LoginForm handleLogin={handleLogin} />
   ) : (
-    <BlogList blogs={blogs} user={user} />
+    <>
+      <h1>blogs</h1>
+      <p>
+        {user.name} logged in{" "}
+        <span>
+          <button onClick={handleLogout}>Logout</button>
+        </span>
+      </p>
+
+      <BlogList blogs={blogs} />
+    </>
   );
 
   /*
