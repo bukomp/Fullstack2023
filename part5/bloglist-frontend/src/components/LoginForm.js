@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Notification from "./Notification";
+import React, { useState } from 'react';
+import Notification from './Notification';
 
 const LoginForm = ({ handleLogin, notification }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();

@@ -1,5 +1,5 @@
-import axios from "axios";
-const baseUrl = "/api/blogs";
+import axios from 'axios';
+const baseUrl = '/api/blogs';
 
 const getAll = () => {
   const request = axios.get(baseUrl);
@@ -43,5 +43,4 @@ const deleteBlog = async (token, id) => {
   return response.data;
 };
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default { getAll, fetchBlogs, createBlog, updateBlogLikes, deleteBlog };

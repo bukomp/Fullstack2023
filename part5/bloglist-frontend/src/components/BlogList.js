@@ -1,4 +1,4 @@
-import Blog from "./Blog";
+import Blog from './Blog';
 
 const BlogList = ({ blogs, handleLike, handleDelete }) => (
   <div>
