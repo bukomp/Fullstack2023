@@ -4,11 +4,21 @@ const CreateBlogForm = ({ handleBlogCreation }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const [toggle, setToggle] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     handleBlogCreation(title, author, url);
   };
+
+  const toggleBlogCreationForm = (event) => {
+    event.preventDefault();
+    setToggle(!toggle);
+  };
+
+  if (!toggle) {
+    return <button onClick={toggleBlogCreationForm}>new note</button>;
+  }
 
   return (
     <div>
@@ -39,6 +49,7 @@ const CreateBlogForm = ({ handleBlogCreation }) => {
           />
         </div>
         <button type="submit">create</button>
+        <button onClick={toggleBlogCreationForm}>cancel</button>
       </form>
     </div>
   );
