@@ -4,6 +4,8 @@ import LoginForm from "./components/LoginForm";
 import CreateBlogForm from "./components/CreateBlogForm";
 import Notification from "./components/Notification";
 
+import { sortBlogsByLikes } from "./helpers/blog.helpers";
+
 import blogService from "./services/blogs.service";
 import userService from "./services/user.service";
 
@@ -20,6 +22,7 @@ const App = () => {
       // Fetch the blogs after loading the token
       fetchBlogs(token);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleNotification = (message, status = "notification" || "error") => {
@@ -55,7 +58,7 @@ const App = () => {
         `a new blog ${newBlog.title} by ${newBlog.author} added`,
         "notification"
       );
-      setBlogs([...blogs, newBlog]);
+      sortBlogsOnListUpdate([...blogs, newBlog]);
     } catch (error) {
       toggleNotification(error.message, "error");
     }
@@ -64,7 +67,9 @@ const App = () => {
   const handleLike = async (id, likes) => {
     try {
       const updatedBlog = await blogService.updateBlogLikes(token, id, likes);
-      setBlogs(blogs.map((blog) => (blog.id === id ? updatedBlog : blog)));
+      sortBlogsOnListUpdate(
+        blogs.map((blog) => (blog.id === id ? updatedBlog : blog))
+      );
     } catch (error) {
       console.error("Liking blog failed:", error);
       toggleNotification("Liking blog failed. Please try again.", "error");
@@ -79,10 +84,14 @@ const App = () => {
   const fetchBlogs = async (token) => {
     try {
       const data = await blogService.fetchBlogs(token);
-      setBlogs(data);
+      sortBlogsOnListUpdate(data);
     } catch (error) {
       console.error("Fetching blogs failed:", error);
     }
+  };
+
+  const sortBlogsOnListUpdate = (list) => {
+    setBlogs(sortBlogsByLikes(list));
   };
 
   return !token ? (
