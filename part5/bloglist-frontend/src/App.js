@@ -76,6 +76,17 @@ const App = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await blogService.deleteBlog(token, id);
+      setBlogs(blogs.filter((blog) => blog.id !== id));
+      toggleNotification(`Blog post successfully deleted.`, "notification");
+    } catch (error) {
+      console.error("Deleting blog failed:", error);
+      toggleNotification("Deleting blog failed. Please try again.", "error");
+    }
+  };
+
   const handleLogout = () => {
     setToken(null);
     window.localStorage.removeItem("loggedInUserToken");
@@ -109,7 +120,11 @@ const App = () => {
         </span>
       </p>
       <CreateBlogForm handleBlogCreation={handleBlogCreation} />
-      <BlogList blogs={blogs} handleLike={handleLike} />
+      <BlogList
+        blogs={blogs}
+        handleLike={handleLike}
+        handleDelete={handleDelete}
+      />
     </>
   );
 };

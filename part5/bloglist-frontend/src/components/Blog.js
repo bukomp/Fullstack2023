@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, handleLike, handleDelete }) => {
   const [toggle, setToggle] = useState(false);
 
   const blogStyle = {
@@ -14,6 +14,12 @@ const Blog = ({ blog, handleLike }) => {
   const toggleBlogData = (event) => {
     event.preventDefault();
     setToggle(!toggle);
+  };
+
+  const deleteConfirmation = () => {
+    if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
+      handleDelete(blog.id);
+    }
   };
 
   if (!toggle) {
@@ -43,6 +49,7 @@ const Blog = ({ blog, handleLike }) => {
         </button>
         <br />
         {blog.user.name}
+        <button onClick={deleteConfirmation}>remove</button>
       </div>
     </div>
   );
