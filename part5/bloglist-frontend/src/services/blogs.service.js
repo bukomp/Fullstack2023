@@ -22,5 +22,16 @@ const createBlog = async (token, title, author, url) => {
   return response.data;
 };
 
+const updateBlogLikes = async (token, id, likes) => {
+  const response = await axios.put(
+    `${baseUrl}/${id}`,
+    { likes: likes },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, fetchBlogs, createBlog };
+export default { getAll, fetchBlogs, createBlog, updateBlogLikes };

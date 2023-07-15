@@ -61,6 +61,16 @@ const App = () => {
     }
   };
 
+  const handleLike = async (id, likes) => {
+    try {
+      const updatedBlog = await blogService.updateBlogLikes(token, id, likes);
+      setBlogs(blogs.map((blog) => (blog.id === id ? updatedBlog : blog)));
+    } catch (error) {
+      console.error("Liking blog failed:", error);
+      toggleNotification("Liking blog failed. Please try again.", "error");
+    }
+  };
+
   const handleLogout = () => {
     setToken(null);
     window.localStorage.removeItem("loggedInUserToken");
@@ -90,7 +100,7 @@ const App = () => {
         </span>
       </p>
       <CreateBlogForm handleBlogCreation={handleBlogCreation} />
-      <BlogList blogs={blogs} />
+      <BlogList blogs={blogs} handleLike={handleLike} />
     </>
   );
 };
