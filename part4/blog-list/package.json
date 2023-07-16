@@ -9,7 +9,8 @@
   "scripts": {
     "test": "set NODE_ENV=test&&jest --silent=true --runInBand",
     "start": "node index.js",
-    "dev": "set NODE_ENV=development&& nodemon index.js"
+    "dev": "set NODE_ENV=development&& nodemon index.js",
+    "dev:test": "set NODE_ENV=test&& nodemon index.js"
   },
   "author": "Edvard",
   "license": "ISC",

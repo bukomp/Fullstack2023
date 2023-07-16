@@ -17,7 +17,7 @@ const CreateBlogForm = ({ handleBlogCreation }) => {
   };
 
   if (!toggle) {
-    return <button onClick={toggleBlogCreationForm}>new note</button>;
+    return <button onClick={toggleBlogCreationForm}>new blog</button>;
   }
 
   return (
