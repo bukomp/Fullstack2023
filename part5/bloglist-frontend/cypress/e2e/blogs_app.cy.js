@@ -46,14 +46,12 @@ describe('Blog app', function () {
     it('A blog can be created', function () {
       cy.contains('new blog').click();
 
-      // replace the below selectors with the actual ones used in the app
       cy.get('#titleInput').type('A new blog by Matti');
       cy.get('#authorInput').type('Matti Luukkainen');
       cy.get('#urlInput').type('http://blogbymatti.com');
 
       cy.get('button').contains('create').click();
 
-      // replace #blog-list with the actual selector for the blog list element
       cy.get('div').should('contain', 'A new blog by Matti');
     });
 
@@ -61,7 +59,6 @@ describe('Blog app', function () {
       beforeEach(function () {
         cy.contains('new blog').click();
 
-        // replace the below selectors with the actual ones used in the app
         cy.get('#titleInput').type('A blog to be liked');
         cy.get('#authorInput').type('Matti Luukkainen');
         cy.get('#urlInput').type('http://likableblogbymatti.com');
@@ -72,11 +69,17 @@ describe('Blog app', function () {
       it('User can like a blog', function () {
         cy.contains('view').click();
 
-        // replace #like-button with the actual selector for the like button
         cy.get('button').contains('like').click();
 
-        // replace #likes-count with the actual selector for the likes count element
         cy.get('div').contains('likes').should('contain', '1');
+      });
+
+      it('User who created a blog can delete it', function () {
+        cy.contains('view').click();
+
+        cy.get('button').contains('remove').click();
+
+        cy.get('div').should('not.contain', 'A blog to be liked');
       });
     });
   });
