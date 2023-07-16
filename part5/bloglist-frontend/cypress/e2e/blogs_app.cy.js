@@ -103,5 +103,45 @@ describe('Blog app', function () {
         cy.get('.error').contains('Deleting blog failed. Please try again.');
       });
     });
+
+    describe('and several blogs exist', function () {
+      beforeEach(function () {
+        ['First', 'Second', 'Third'].forEach((title, i) => {
+          cy.contains('new blog').click();
+
+          // replace the below selectors with the actual ones used in the app
+          cy.get('#titleInput').type(`${title} blog`);
+          cy.get('#authorInput').type('Matti Luukkainen');
+          cy.get('#urlInput').type(
+            `http://${title.toLowerCase()}blogbymatti.com`
+          );
+
+          cy.get('button').contains('create').click();
+
+          // Open the blog details
+          cy.contains(`${title} blog`).parent().as('blogList');
+          cy.get('@blogList').contains('view').click();
+
+          // Like the blog i+1 times
+          for (let j = 0; j < i + 1; j++) {
+            cy.get('@blogList').contains('like').click();
+
+            // Wait for the likes to update
+            cy.get('@blogList').contains(`likes ${j + 1}`);
+          }
+
+          // Close the blog details
+          cy.get('@blogList').contains('hide').click();
+        });
+      });
+
+      it('Blogs are ordered according to likes', function () {
+        cy.get('.blog').then((blogs) => {
+          cy.wrap(blogs[0]).should('contain', 'Third blog');
+          cy.wrap(blogs[1]).should('contain', 'Second blog');
+          cy.wrap(blogs[2]).should('contain', 'First blog');
+        });
+      });
+    });
   });
 });
