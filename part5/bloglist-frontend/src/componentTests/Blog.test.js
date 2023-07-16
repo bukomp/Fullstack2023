@@ -59,3 +59,40 @@ test("shows blog url and likes when view details button is clicked", () => {
   expect(screen.getByText(url)).toBeInTheDocument();
   expect(screen.getByText(likes)).toBeInTheDocument();
 });
+
+test("clicking the like button twice calls event handler twice", () => {
+  const blog = {
+    id: "5fffd4f8d4f7f10004f6e6a0",
+    title: "Test Blog",
+    author: "Test Author",
+    url: "https://testurl.com",
+    likes: 5,
+    user: {
+      name: "John Doe",
+      username: "johndoe",
+      passwordHash: "hashedpassword",
+      id: "60b6c0f9d4f7f10004f6e6a0",
+      blogs: ["5fffd4f8d4f7f10004f6e6a0"],
+    },
+  };
+
+  const mockHandler = jest.fn();
+
+  render(<Blog blog={blog} handleLike={mockHandler} />);
+
+  const viewButton = screen.getByText("view");
+  fireEvent.click(viewButton);
+
+  // Find the like button and click it twice
+  // If the button text is different, replace 'like' with the actual text
+  const likeButton = screen.getByText("like");
+
+  expect(likeButton).toBeInTheDocument();
+  expect(likeButton).toBeVisible();
+
+  fireEvent.click(likeButton);
+  fireEvent.click(likeButton);
+
+  // Check that the mock handler was called twice
+  expect(mockHandler.mock.calls).toHaveLength(2);
+});
