@@ -4,11 +4,17 @@ describe('Blog app', function () {
     username: 'mluukkai',
     password: 'salainen',
   };
+  const secondUser = {
+    name: 'John Doe',
+    username: 'johndoe',
+    password: 'secret',
+  };
 
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3001/api/testing/reset');
 
     cy.request('POST', 'http://localhost:3001/api/user/', user);
+    cy.request('POST', 'http://localhost:3001/api/user/', secondUser);
 
     cy.visit('http://localhost:3000');
   });
@@ -80,6 +86,21 @@ describe('Blog app', function () {
         cy.get('button').contains('remove').click();
 
         cy.get('div').should('not.contain', 'A blog to be liked');
+      });
+
+      it('Only creator can see the delete button', function () {
+        cy.contains('view').click();
+        cy.get('button').contains('remove');
+
+        cy.get('button').contains('Logout').click();
+
+        cy.get('#usernameInput').type(secondUser.username);
+        cy.get('#passwordInput').type(secondUser.password);
+        cy.get('#login-button').click();
+
+        cy.contains('view').click();
+        cy.get('button').contains('remove').click();
+        cy.get('.error').contains('Deleting blog failed. Please try again.');
       });
     });
   });
