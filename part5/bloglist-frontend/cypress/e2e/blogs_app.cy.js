@@ -56,5 +56,28 @@ describe('Blog app', function () {
       // replace #blog-list with the actual selector for the blog list element
       cy.get('div').should('contain', 'A new blog by Matti');
     });
+
+    describe('and a blog exists', function () {
+      beforeEach(function () {
+        cy.contains('new blog').click();
+
+        // replace the below selectors with the actual ones used in the app
+        cy.get('#titleInput').type('A blog to be liked');
+        cy.get('#authorInput').type('Matti Luukkainen');
+        cy.get('#urlInput').type('http://likableblogbymatti.com');
+
+        cy.get('button').contains('create').click();
+      });
+
+      it('User can like a blog', function () {
+        cy.contains('view').click();
+
+        // replace #like-button with the actual selector for the like button
+        cy.get('button').contains('like').click();
+
+        // replace #likes-count with the actual selector for the likes count element
+        cy.get('div').contains('likes').should('contain', '1');
+      });
+    });
   });
 });
