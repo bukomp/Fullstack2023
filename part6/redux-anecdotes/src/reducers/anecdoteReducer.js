@@ -13,9 +13,9 @@ export const getId = () => (100000 * Math.random()).toFixed(0);
 
 const asObject = (anecdote) => {
   return {
-    content: anecdote,
-    id: getId(),
-    votes: 0,
+    content: anecdote.content || anecdote,
+    id: anecdote.id || getId(),
+    votes: anecdote.votes || 0,
   };
 };
 
@@ -40,9 +40,11 @@ const anecdoteSlice = createSlice({
       const newAnecdote = asObject(action.payload);
       return [...state, newAnecdote].sort((a, b) => b.votes - a.votes);
     },
+    initializeAnecdotes: (state, action) => {
+      return action.payload;
+    },
   },
 });
 
-export const { vote, addAnecdote } = anecdoteSlice.actions;
-
+export const { vote, addAnecdote, initializeAnecdotes } = anecdoteSlice.actions;
 export default anecdoteSlice.reducer;

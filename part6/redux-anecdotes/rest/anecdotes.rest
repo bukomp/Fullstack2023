@@ -1,0 +1,9 @@
+###
+GET http://localhost:3001/anecdotes
+
+### Same name
+POST http://localhost:3001/anecdotes
+content-type: application/json
+
+"newnewenwewnewww"
+###

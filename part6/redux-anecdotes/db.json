@@ -1,0 +1,39 @@
+{
+  "anecdotes": [
+    {
+      "content": "Change is the only constant in life.",
+      "id": "47145",
+      "votes": 0
+    },
+    {
+      "content": "The only way to do great work is to love what you do.",
+      "id": "21149",
+      "votes": 0
+    },
+    {
+      "content": "The purpose of software engineering is to control complexity, not to create it.",
+      "id": "69581",
+      "votes": 0
+    },
+    {
+      "content": "First, solve the problem. Then, write the code.",
+      "id": "36975",
+      "votes": 0
+    },
+    {
+      "content": "Code is like humor. When you have to explain it, it’s bad.",
+      "id": "25170",
+      "votes": 0
+    },
+    {
+      "content": "Any code of your own that you haven’t looked at for six or more months might as well have been written by someone else.",
+      "id": "98312",
+      "votes": 0
+    },
+    {
+      "content": "awdawdawdwa",
+      "votes": 0,
+      "id": "APneFbn"
+    }
+  ]
+}
